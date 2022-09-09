@@ -11,23 +11,18 @@ const app = express();
 //configurar Cors
 app.use(cors());
 
+// Lectura y parseo del Body
+app.use(express.json());
+
 //Base de Datos
 dbConnection();
 
 // mean_user
 // SbqmIxy8RNiWtYjk
-//console.log(process.env);
-
-
-
 
 //Rutas
-app.get('/', (req, res) => {
-  res.json({
-    ok: true,
-    msg: 'Hola Mundo'
-  });
-});
+app.use('/api/usuarios',require('./routes/usuarios'));
+app.use('/api/login',require('./routes/auth'));
 
 app.listen(process.env.PORT, () => {
   console.log('Servicor Corriendo en el puerto: ', process.env.PORT);
