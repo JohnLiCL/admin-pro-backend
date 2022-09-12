@@ -17,12 +17,13 @@ app.use(express.json());
 //Base de Datos
 dbConnection();
 
-// mean_user
-// SbqmIxy8RNiWtYjk
-
 //Rutas
 app.use('/api/usuarios',require('./routes/usuarios'));
+app.use('/api/hospitales',require('./routes/hospitales'));
+app.use('/api/medicos',require('./routes/medicos'));
 app.use('/api/login',require('./routes/auth'));
+app.use('/api/busqueda',require('./routes/busquedas'));
+app.use('/api/upload',require('./routes/uploads'));
 
 app.listen(process.env.PORT, () => {
   console.log('Servicor Corriendo en el puerto: ', process.env.PORT);
