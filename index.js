@@ -11,6 +11,9 @@ const app = express();
 //configurar Cors
 app.use(cors());
 
+//Carpeta Publica
+app.use(express.static('public'));
+
 // Lectura y parseo del Body
 app.use(express.json());
 
