@@ -21,7 +21,8 @@ router.post('/',
 
 router.put('/:id',
   [
-    
+    validaJWT,
+    check('nombre', 'El nombre del hospital es obligarorio!!!').not().isEmpty(),
   ], updateHospital);
 
 router.delete('/:id', validaJWT,  deleteHospital);

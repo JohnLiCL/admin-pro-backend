@@ -22,7 +22,10 @@ router.post('/',
 
 router.put('/:id',
   [
-    
+    validaJWT,
+    check('nombre', 'El nombre del medico es obligarorio!!!').not().isEmpty(),
+    check('hospital','El hospital id debe ser valido!!!').not().isEmpty(),
+    validaCampos
   ], updateMedico);
 
 router.delete('/:id', validaJWT,  deleteMedico);
