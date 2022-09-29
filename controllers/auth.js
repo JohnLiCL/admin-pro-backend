@@ -9,13 +9,12 @@ const login = async (req, res = response) => {
   const { email, password } = req.body;
 
   try {
-
     // Verificar Email
     const usuarioDB = await Usuario.findOne({ email });
     if (!usuarioDB) {
       return res.status(404).send({
         ok: false,
-        message: 'Email no encontrado!!!'
+        msg: 'Email no encontrado!!!'
       });
     }
 
@@ -24,13 +23,12 @@ const login = async (req, res = response) => {
     if (!validaPassword) {
       return res.status(400).send({
         ok: false,
-        message: 'Contraseña no valida!!!'
+        msg: 'Contraseña no valida!!!'
       });
     }
 
     // Generar TOKEN - JWT
     const token = await generaJWT(usuarioDB.id);
-
 
     res.json({
       ok: true,
@@ -45,12 +43,9 @@ const login = async (req, res = response) => {
     });
 
   }
-
 }
 
 const googleSignIn = async (req, res = response) => {
-
-
   try {
     const { email, name, picture } = await googleVerify(req.body.token);
 
@@ -60,6 +55,7 @@ const googleSignIn = async (req, res = response) => {
     if (!usuarioDB) {
       usuario = new Usuario({
         nombre: name,
+        apellido: ' ',
         email,
         password: '@@@',
         img: picture,
@@ -70,7 +66,7 @@ const googleSignIn = async (req, res = response) => {
       usuario = usuarioDB;
       usuario.google = true
     }
-
+    //console.log(usuario);
     //Guardar usuario
     await usuario.save();
 
@@ -86,26 +82,39 @@ const googleSignIn = async (req, res = response) => {
     });
 
   } catch (error) {
-    console.log(error);
     res.status(400).json({
       ok: false,
       msg: 'Token de Google no es valido!!!',
     });
-
   }
-
 }
 
 const renewToken = async (req, res = response) => {
-  const uid = req.uid;
+  try {
+    const uid = req.uid;
+    // Generar TOKEN - JWT
+    const token = await generaJWT(uid);
+    // Busca el Usuario
+    const usuarioDB = await Usuario.findById(uid);
+    if (!usuarioDB) {
+      res.status(404).json({
+        ok: false,
+        msg: 'Usuario no encontrado!!!'
+      });
+    }
 
-  // Generar TOKEN - JWT
-  const token = await generaJWT(uid);
+    res.json({
+      ok: true,
+      token,
+      usuarioDB
+    });
 
-  res.json({
-    ok: true,
-    token
-  });
+  } catch (err) {
+    res.status(400).json({
+      ok: false,
+      msg: 'Token no es valido!!!',
+    });
+  }
 }
 
 module.exports = {

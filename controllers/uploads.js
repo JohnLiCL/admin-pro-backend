@@ -74,9 +74,9 @@ const getImage = (req, res = response) => {
   const tipo = req.params.tipo;
   const image = req.params.image;
 
-  let pathImagen = path.join(__dirname, `../uploads/${ tipo }/${ image }` );
+  let pathImagen = path.resolve(__dirname, `../uploads/${ tipo }/${ image }` );
   if (!fs.existsSync(pathImagen)) {
-    pathImagen = path.join(__dirname, `../uploads/no-img.jpg` );
+    pathImagen = path.resolve(__dirname, `../uploads/no-img.jpg` );
   }  
   res.sendFile(pathImagen);
 }

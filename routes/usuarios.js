@@ -15,6 +15,7 @@ router.get('/',validaJWT, getUsuarios);
 router.post('/',
   [
     check('nombre', 'El nombre es obligarorio!!!').not().isEmpty(),
+    check('apellido', 'El apellido es obligarorio!!!').not().isEmpty(),
     check('password', 'La contraseña es obligaroria!!!').not().isEmpty(),
     check('email', 'El email es obligarorio!!!').isEmail(),
     validaCampos,
@@ -25,8 +26,8 @@ router.put('/:id',
   [
     validaJWT,
     check('nombre', 'El nombre es obligarorio!!!').not().isEmpty(),
-    check('password', 'La contraseña es obligaroria!!!').not().isEmpty(),
-    check('role', 'El rol es obligarorio!!!').isEmpty(),
+    check('apellido', 'El apellido es obligarorio!!!').not().isEmpty(),
+    check('role', 'El Rol es obligarorio!!!').not().isEmpty(),
     validaCampos,
   ], updateUsuario);
 

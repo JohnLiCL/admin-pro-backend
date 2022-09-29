@@ -64,7 +64,6 @@ const crearUsuario = async (req, res = response) => {
 
 const updateUsuario = async (req, res = response) => {
   // ToDo: validar token y comprobar si el usuario es correcto
-
   const uid = req.params.id;
 
   try {
@@ -74,7 +73,6 @@ const updateUsuario = async (req, res = response) => {
         ok: false,
         msg: 'No esxite un usuario con el ID!!!'
       });
-
     }
 
     //Actualizar el usuario
@@ -89,23 +87,27 @@ const updateUsuario = async (req, res = response) => {
         });
       }
     }
+    if(!usuarioDB.google) {
+      campos.email = email;
+    }else if(usuarioDB.email !== email) {
+      return res.status(400).json({
+        ok: false,
+        msg: 'Usuarios de Google no pueden cambiar el email!!!'
+      });
+    }
 
-    campos.email = email;
     const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, { new: true });
 
     res.json({
       ok: true,
       usuario: usuarioActualizado,
     });
-
-
   } catch (error) {
     console.log(error);
     res.status(500).send({
       ok: false,
       msg: 'Error Inesperado... revisar Log!!!'
     });
-
   }
 };
 
