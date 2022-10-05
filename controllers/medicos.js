@@ -2,16 +2,41 @@ const { response } = require('express');
 const Hospital = require('../models/hospital');
 const Medico = require('../models/medicos');
 
-const getMedicos = async(req, res = response, next) => {
+const getMedicos = async (req, res = response, next) => {
   const medicos = await Medico.find()
-                                .populate('hospital', 'nombre')
-                                .populate('usuario', 'nombre');
+    .populate('hospital', 'nombre')
+    .populate('usuario', 'nombre');
   res.json({
     ok: true,
     medicos: medicos
   });
   next();
 }
+
+
+const getMedico = async (req, res = response) => {
+
+  const mid = req.params.id;
+
+  try {
+    const medico = await Medico.findById(mid)
+      .populate('hospital', 'nombre')
+      .populate('usuario', 'nombre');
+
+    res.json({
+      ok: true,
+      medico: medico
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Comuniquese con el Admin!!!'
+    });
+  }
+
+}
+
 
 const crearMedico = async (req, res = response, next) => {
   const uid = req.uid;
@@ -22,26 +47,26 @@ const crearMedico = async (req, res = response, next) => {
     ...req.body
   });
 
-   try {
+  try {
 
     const medicoDB = await medico.save();
-      res.json({
-        ok: true,
-        medico: medicoDB
-      });
-      next();  
-   } catch (error) {
-      res.status(500).json({
-        ok: false,
-        msg: 'Comuniquese con el Admin!!!'
-      });
-   }
+    res.json({
+      ok: true,
+      medico: medicoDB
+    });
+    next();
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Comuniquese con el Admin!!!'
+    });
+  }
 }
 
 const updateMedico = async (req, res = response) => {
   const mid = req.params.id;
   const uid = req.params.uid;
-    
+
   try {
     const medico = await Medico.findById(mid);
 
@@ -71,7 +96,7 @@ const updateMedico = async (req, res = response) => {
       msg: 'Comuniquese con el Administrador!!!'
     });
   }
- 
+
 }
 
 const deleteMedico = async (req, res = response) => {
@@ -106,6 +131,7 @@ const deleteMedico = async (req, res = response) => {
 
 module.exports = {
   getMedicos,
+  getMedico,
   crearMedico,
   updateMedico,
   deleteMedico
